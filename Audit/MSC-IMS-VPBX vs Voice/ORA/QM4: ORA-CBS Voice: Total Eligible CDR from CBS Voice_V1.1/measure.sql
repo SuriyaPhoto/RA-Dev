@@ -3,8 +3,13 @@ select  count(cbs.sts_id),
         cbs.cbs_start_dttm, 
         nvl(cbs.cbs_telp_type,'UNKNOWN'), 
         nvl(cbs.cbs_company_name,'UNKNOWN'), 
-        case when length(cbs_CALL_REF_NO) = 16 then 'VPBX' when cbs_artm_type in ( '1201', '1202', '1203', '1204', '1205', '1206','1207', '1208', '1209', '1210','1211', '1212', '1251', '1252', '1253', '1254', '1255', '1256', '1257', '1258','1259', '1260', '1261',, 
-        nvl(cbs.cbs_service_flow,'UNKNOWN'), 
+        case when length(cbs_CALL_REF_NO) = 16 then 'VPBX' 
+     ,CASE WHEN length(cbs_CALL_REF_NO) = 16 THEN 'VPBX'
+                WHEN cbs_artm_type IN ( '1201','1202','1203','1204','1205','1206','1207'
+                ,'1208','1209','1210','1211','1212','1251','1252','1253','1254','1255'
+                ,'1256','1257','1258','1259','1260','1261','1262','1263','1264','1265'
+                ,'1266','1267' ) THEN 'IMS Huawei'  ELSE 'MSC Ericsson' END as cbs_CALL_REF_NO
+         nvl(cbs.cbs_service_flow,'UNKNOWN'), 
         nvl(cbs.cbs_caller_number,'UNKNOWN'), 
         nvl(cbs.cbs_called_number,'UNKNOWN'), 
         nvl(upper(cbs.cbs_call_ref_no),'UNKNOWN'), 
