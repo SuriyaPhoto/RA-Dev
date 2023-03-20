@@ -1,29 +1,24 @@
 SELECT  msc_telp_type
        ,msc_network_type
        ,msc_recordtype
-       ,CASE WHEN substr(msc_caller_number,1,1) <> '+' 
-              THEN concat('+',msc_caller_number)  ELSE msc_caller_number END
+       ,CASE WHEN substr(msc_caller_number,1,1) <> '+' THEN concat('+',msc_caller_number)  ELSE msc_caller_number END
        ,msc_called_number
        ,msc_add_routing_category
        ,msc_called_category
        ,sts_id
-       ,CASE WHEN msc_sms_type IN ('compositeCallDataRecord|MO','compositeCallDataRecord|CFW') 
-              THEN msc_derived_duration  ELSE msc_duration END
+       ,CASE WHEN msc_sms_type IN ('compositeCallDataRecord|MO','compositeCallDataRecord|CFW') THEN msc_derived_duration  ELSE msc_duration END
        ,msc_start_dttm
        ,msc_receive_time
-       ,cast (msc.partition_col AS TIMESTAMP)
+       ,cast (partition_col AS TIMESTAMP)
        ,msc_part_key
        ,msc_imsi_number
        ,msc_event_type
        ,msc_dup_fl
        ,msc_log_rsn
        ,msc_sms_type
-FROM u_msc msc, $m$ mig
-WHERE msc.partition_col >= date_format($FROM, 'yyyy-MM-dd')
-    AND msc.partition_col <= date_format($TO, 'yyyy-MM-dd')
-    AND substr(msc_called_number,-(length(msc_called_number)-1)) >= mig.range_from
-    AND substr(msc_called_number,-(length(msc_called_number)-1)) <= mig.range_to
-    AND msc_processed_timestamp >= mig.apply_dttm
+FROM u_msc 
+WHERE partition_col >= date_format($FROM, 'yyyy-MM-dd')
+    AND partition_col <= date_format($TO, 'yyyy-MM-dd')
     AND ((msc_called_numb_ton <> '56801111' 
     AND msc_called_numb_ton <> '57801111' 
     AND msc_called_numb_ton <> 'B56801111' 

@@ -11,19 +11,16 @@ SELECT  msc_telp_type
         THEN msc_derived_duration  ELSE msc_duration END
         ,msc_start_dttm
         ,msc_receive_time
-        ,cast (msc.partition_col AS TIMESTAMP)
+        ,cast (partition_col AS TIMESTAMP)
         ,msc_part_key
         ,msc_imsi_number
         ,msc_event_type
         ,msc_dup_fl
         ,msc_log_rsn
         ,msc_sms_type
-FROM u_msc msc, $m$ mig
-WHERE (date_format(msc.partition_col, 'yyyy-MM-dd') >= date_sub($FROM, 1) 
-    AND date_format(msc.partition_col, 'yyyy-MM-dd') <= date_sub($TO, 1) 
-    AND substr(msc_called_number,-(length(msc_called_number)-1)) >= mig.range_from
-    AND substr(msc_called_number,-(length(msc_called_number)-1)) <= mig.range_to
-    AND msc_processed_timestamp >= mig.apply_dttm
+FROM u_msc msc
+WHERE (date_format(partition_col, 'yyyy-MM-dd') >= date_sub($FROM, 1) 
+    AND date_format(partition_col, 'yyyy-MM-dd') <= date_sub($TO, 1) 
     AND msc_part_key IN (22, 23))
     AND ((msc_called_numb_ton <> '56801111' 
     AND msc_called_numb_ton <> '57801111' 
@@ -71,9 +68,10 @@ WHERE (date_format(msc.partition_col, 'yyyy-MM-dd') >= date_sub($FROM, 1)
         or msc_imsi_number is null) 
     AND upper(msc_recordtype) <> 'MTC' 
     AND upper(msc_event_type) = 'VOICE' 
-    AND msc_dup_fl = 'N' 
     AND msc_incoming_trunk_id not like 'SIVR%' 
-    AND (msc_log_rsn like 'E3012%' or msc_log_rsn like 'E3048%' 
+    AND msc_dup_fl = 'N' 
+    AND (msc_log_rsn like 'E3012%' 
+    or msc_log_rsn like 'E3048%' 
         or (msc_log_rsn like 'E3004%' 
     AND (substr(msc_incoming_trunk_id, 1, 1) = '0' 
         or substr(msc_incoming_trunk_id, 1, 1) = '1'))))

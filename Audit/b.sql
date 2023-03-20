@@ -1,0 +1,16 @@
+SELECT  SUM( ( nvl( mer.msc_ims_vpbx_record_count,0 ) + nvl( mer_2.msc_ims_vpbx_record_count,0 ) ) )
+       ,SUM( ( nvl( mer.cbs_record_count,0 ) + nvl( mer_2.cbs_record_count,0 ) ) )
+       ,SUM( ( nvl( mer.missing_count_mscimsvpbx,0 ) + nvl( mer_2.missing_count_mscimsvpbx,0 ) ) )
+       ,SUM( ( nvl( mer.missing_count_in_cbs,0 ) + nvl( mer_2.missing_count_in_cbs,0 ) ) )
+       ,SUM( ( nvl( mer.mismatch_count,0 ) + nvl( mer_2.mismatch_count,0 ) ) )
+       ,SUM( ( nvl( mer.match_count,0 ) + nvl( mer_2.match_count,0 ) ) )
+       ,SUM( ( nvl( mer.msc_ims_vpbx_total_dur,0 ) + nvl( mer_2.msc_ims_vpbx_total_dur,0 ) ) )
+       ,SUM( ( nvl( mer.cbs_total_duration,0 ) + nvl( mer_2.cbs_total_duration,0 ) ) )
+       ,SUM( ( nvl( mer.missing_dur_mscimsvpbx,0 ) + nvl( mer_2.missing_dur_mscimsvpbx,0 ) ) )
+       ,SUM( ( nvl( mer.missing_dur_in_cbs,0 ) + nvl( mer_2.missing_dur_in_cbs,0 ) ) )
+       ,SUM( ( nvl( mer.mismatch_dur_s1_greater_2,0 ) + nvl( mer_2.mismatch_dur_s1_greater_2,0 ) ) )
+       ,SUM( ( nvl( mer.mismatch_dur_s1_less_s2,0 ) + nvl( mer_2.mismatch_dur_s1_less_s2,0 ) ) )
+       ,SUM( ( nvl( mer.match_duration,0 ) + nvl( mer_2.match_duration,0 ) ) )
+FROM mea_req_1485495 mer
+FULL OUTER JOIN mea_req_1485499 mer_2
+ON ( ( mer.telephone_type = mer_2.telephone_type AND mer.record_type = mer_2.record_type ) AND mer.network_type = mer_2.network_type )
